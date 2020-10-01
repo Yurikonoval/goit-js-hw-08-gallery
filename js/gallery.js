@@ -43,7 +43,7 @@ function imageOpen(event) {
   }
 
   refs.lightBox.classList.add(`is-open`);
-  console.log(event.target);
+  // console.log(event.target);
   refs.lightBoxImage.src = event.target.dataset.source;
   refs.lightBoxImage.alt = event.target.alt;
 
@@ -56,7 +56,7 @@ function closeModal(event) {
   window.removeEventListener(`keydown`, onKeyDown);
 }
 function onKeyDown(event) {
-  console.log(event.key);
+  // console.log(event.key);
   if (event.key === `Escape`) {
     closeModal();
   } else if (event.key === `ArrowRight`) {
