@@ -18,7 +18,7 @@ refs.overlay.addEventListener(`click`, closeModal);
 
 function createPictureCardsMarkUp(pictures) {
   return pictures
-    .map(({ preview, original, description }) => {
+    .map(({ preview, original, description }, index) => {
       return `<li class="gallery__item">
   <a
     class="gallery__link"
@@ -28,6 +28,7 @@ function createPictureCardsMarkUp(pictures) {
       class="gallery__image"
       src=${preview}
       data-source=${original}
+      data-index=${index}
       alt=${description}
     />
   </a>
@@ -43,9 +44,11 @@ function imageOpen(event) {
   }
 
   refs.lightBox.classList.add(`is-open`);
-  // console.log(event.target);
+
   refs.lightBoxImage.src = event.target.dataset.source;
   refs.lightBoxImage.alt = event.target.alt;
+
+  refs.lightBoxImage.dataset.index = event.target.dataset.index;
 
   window.addEventListener(`keydown`, onKeyDown);
 }
@@ -56,32 +59,43 @@ function closeModal(event) {
   window.removeEventListener(`keydown`, onKeyDown);
 }
 function onKeyDown(event) {
-  // console.log(event.key);
-  if (event.key === `Escape`) {
-    closeModal();
-  } else if (event.key === `ArrowRight`) {
-    nextPicture();
-  } else if (event.key === `ArrowLeft`) {
-    previousPicture();
-  }
-  return;
+  if (event.key === `Escape`) closeModal();
+  if (event.key === `ArrowRight`) nextPicture();
+  if (event.key === `ArrowLeft`) previousPicture();
 }
 
 function nextPicture() {
-  for (let i = 0; i <= pictures.length; i += 1) {
-    if (refs.lightBoxImage.src === pictures[i].original) {
-      refs.lightBoxImage.src = pictures[i + 1].original;
-      refs.lightBoxImage.alt = pictures[i + 1].description;
-      break;
-    }
-  }
+  let index = +refs.lightBoxImage.dataset.index;
+
+  const imageList = refs.gallery.querySelectorAll('.gallery__image');
+
+  refs.lightBoxImage.src = imageList[index + 1].dataset.source;
+
+  refs.lightBoxImage.dataset.index = imageList[index + 1].dataset.index;
+  refs.lightBoxImage.alt = imageList[index + 1].alt;
+
+  // for (let i = 0; i <= pictures.length; i += 1) {
+  //   if (refs.lightBoxImage.src === pictures[i].original) {
+  //     refs.lightBoxImage.src = pictures[i + 1].original;
+  //     refs.lightBoxImage.alt = pictures[i + 1].description;
+  //     break;
+  //   }
+  // }
 }
 function previousPicture() {
-  for (let i = 0; i <= pictures.length; i += 1) {
-    if (refs.lightBoxImage.src === pictures[i].original) {
-      refs.lightBoxImage.src = pictures[i - 1].original;
-      refs.lightBoxImage.alt = pictures[i - 1].description;
-      break;
-    }
-  }
+  const index = +refs.lightBoxImage.dataset.index;
+  const imageList = refs.gallery.querySelectorAll('.gallery__image');
+
+  refs.lightBoxImage.src = imageList[index - 1].dataset.source;
+
+  refs.lightBoxImage.dataset.index = imageList[index - 1].dataset.index;
+  refs.lightBoxImage.alt = imageList[index - 1].alt;
+
+  // for (let i = 0; i <= pictures.length; i += 1) {
+  //   if (refs.lightBoxImage.src === pictures[i].original) {
+  //     refs.lightBoxImage.src = pictures[i - 1].original;
+  //     refs.lightBoxImage.alt = pictures[i - 1].description;
+  //     break;
+  //   }
+  // }
 }
